@@ -1,6 +1,27 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
 
 function Navbar() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        if (token) {
+            setIsLoggedIn(true)
+        }
+        else {
+            setIsLoggedIn(false)
+        }
+    }, [isLoggedIn])
+
+    const onLogoutHandler = () => {
+        localStorage.removeItem('token')
+        setIsLoggedIn(false)
+        navigate('/login')
+    }
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <Link className="navbar-brand" to="/">EShop</Link>
@@ -23,10 +44,15 @@ function Navbar() {
                         <Link className="nav-link" to="/contact">Contact</Link>
                     </li>
                 </ul>
-                <form className="form-inline my-2 my-lg-0">
-                    <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                <div className="form-inline my-2 my-lg-0">
+                    {/* <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" /> */}
+                    {/* <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> */}
+                    {isLoggedIn ?
+                        <button className="btn btn-outline-danger" onClick={onLogoutHandler}>Logout</button>
+                        :
+                        <Link to="/login" className="btn btn-outline-success">Login</Link>
+                    }
+                </div>
             </div>
         </nav>
     )
