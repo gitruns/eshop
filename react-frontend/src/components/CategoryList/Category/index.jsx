@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
 
 function Category({ data }) {
-    const { id, name, image } = data
+    const { name, image } = data
+    // const { id, name, image } = data
     return (
         <div className="col-sm-3">
             <div className="card">

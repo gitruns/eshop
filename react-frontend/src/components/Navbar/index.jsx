@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
+import { useSelector } from "react-redux"
 
 function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const cart = useSelector(state => state.carts)
 
     const navigate = useNavigate()
 
@@ -45,6 +47,16 @@ function Navbar() {
                     </li>
                 </ul>
                 <div className="form-inline my-2 my-lg-0">
+                    <Link to="/cart" className={"btn mr-2 position-relative" + (cart.length > 0 ? ' btn-success' : ' btn-outline-success')}>
+                        <i className="bx bx-cart bx-sm"></i>
+                        {cart.length > 0 && (
+                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {cart.length}
+                            </span>
+                        )}
+                    </Link>
+
+                    {/* <Link to="/cart" className="btn btn-outline-success mr-2">Cart ({cart.length})</Link> */}
                     {/* <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" /> */}
                     {/* <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> */}
                     {isLoggedIn ?

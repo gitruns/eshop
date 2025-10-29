@@ -6,6 +6,7 @@ import ContactPage from "./pages/ContactPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
       {/* <AboutPage /> */}
       {/* <ContactPage /> */}
       <BrowserRouter>
-        <marquee><h1>Hello...</h1></marquee>
+        {/* <marquee><h1>Hello...</h1></marquee> */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductPage />} />
@@ -25,6 +26,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
       </BrowserRouter>
     </>
