@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: "optional:configserver:http://localhost:9000"
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: category-service
+#          uri: lb://category-service
+#          predicates:
+#            - Path=/api/categories/**
+#        - id: order-service
+#          uri: lb://order-service
+#          predicates:
+#            - Path=/api/orders/**
+#        - id: payment-service
+#          uri: lb://payment-service
+#          predicates:
+#            - Path=/api/payments/**
+#        - id: product-service
+#          uri: lb://product-service
+#          predicates:
+#            - Path=/api/products/**
+#        - id: auth-service
+#          uri: lb://auth-service
+#          predicates:
+#            - Path=/api/auth/**
