@@ -1,19 +1,41 @@
-// import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import './styles.css'
+import axios from 'axios'
 
 function RegisterPage() {
+    const navigate = useNavigate()
+
     const initialValues = {
         firstName: '',
         email: '',
         mobile: '',
         password: '',
     }
+
+
     const onSubmit = values => {
+        // map to backend DTO
+        const registerPayload = {
+            name: values.firstName,
+            email: values.email,
+            password: values.password,
+            role: 'ROLE_USER' // Default role
+        };
+
+        axios.post('http://localhost:9191/api/auth/register', registerPayload)
+            .then(response => {
+                console.log("Registration successful:", response.data);
+                navigate('/login');
+            })
+            .catch(error => {
+                console.error("Registration failed:", error.response.data);
+            });
+
         console.log(values)
     }
+
     // const validate = (values) => {
     //     let errors = {}
     //     if (!values.firstName) {

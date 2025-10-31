@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import axios from 'axios'
+import axios from '../../api/axiosConfig'
 
 
 function LoginPage() {
@@ -18,15 +18,22 @@ function LoginPage() {
         password: ''
     }
     const onSubmit = values => {
+        // map to backend DTO
+        const loginPayload = {
+            usernameOrEmail: values.email,
+            password: values.password
+        }
         // console.log(values)
-        axios.post('https://api.escuelajs.co/api/v1/auth/login', values)
+        // axios.post('https://api.escuelajs.co/api/v1/auth/login', values)
+        axios.post('/api/auth/login', loginPayload)
             .then((response) => {
                 // success
                 setRequestResponse({
                     message: 'Login successful',
                     alertClass: 'alert alert-success'
                 })
-                localStorage.setItem('token', response.data.access_token)
+                // localStorage.setItem('token', response.data.access_token)
+                localStorage.setItem('token', response.data)
                 navigate('/')
             }, (error) => {
                 // error

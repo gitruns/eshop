@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import axios from '../../api/axiosConfig'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/actions/cart-actions'
@@ -11,7 +11,8 @@ function ProductDetails() {
 
     const { id } = useParams()
     const fetchData = () => {
-        axios.get('https://api.escuelajs.co/api/v1/products/' + id)
+        // axios.get('https://api.escuelajs.co/api/v1/products/' + id)
+        axios.get('/api/products/' + id)
             .then(res => setProduct(res.data))
             .catch(err => console.error("Error fetching data:", err))
     }
@@ -29,12 +30,12 @@ function ProductDetails() {
             <div className="row mt-5">
                 <div className="col-6">
                     <div className="wrapper">
-                        <img src={product.images} alt={product.title} className="img-fluid" />
+                        <img src={product.images} alt={product.productName} className="img-fluid" />
                     </div>
                 </div>
                 <div className="col-6">
                     <div className="wrapper">
-                        <h2>{product.title}</h2>
+                        <h2>{product.productName}</h2>
                         <span class="badge badge-secondary">{product?.category?.name}</span>
                         <p>{product.description}</p>
                         <div className="d-flex justify-content-between align-items-center">

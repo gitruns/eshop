@@ -81,7 +81,7 @@ import { Link } from "react-router-dom"
 import './styles.css'
 
 function Item({ data }) {
-    const { id, title, price, images, quantity } = data
+    const { id, productName, price, images, quantity } = data
     const dispatch = useDispatch()
 
     const onAddHandler = () => dispatch(addToCart(data))
@@ -96,7 +96,7 @@ function Item({ data }) {
                     <Link to={`/products/${id}`} className="d-block w-100">
                         <img
                             src={images}
-                            alt={title}
+                            alt={productName}
                             className="rounded product-thumb"
                         />
                     </Link>
@@ -106,7 +106,7 @@ function Item({ data }) {
                 <div className="col-9 d-flex flex-column justify-content-between">
                     <div className="d-flex justify-content-between align-items-start mb-2">
                         <Link to={`/products/${id}`} className="text-decoration-none text-dark">
-                            <h5 className="card-title mb-0">{title}</h5>
+                            <h5 className="card-title mb-0">{productName}</h5>
                         </Link>
                         <button onClick={onDeleteHandler} className="btn btn-outline-danger btn-sm">
                             &times;

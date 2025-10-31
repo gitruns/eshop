@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios from '../../api/axiosConfig'
 import Product from './Product'
 
 function ProductList() {
     const [products, setProducts] = useState([])
 
     const fetchData = () => {
-        axios.get('https://api.escuelajs.co/api/v1/products')
+        // axios.get('https://api.escuelajs.co/api/v1/products')
+        axios.get('/api/products')
             .then(res => setProducts(res.data))
             .catch(err => console.error("Error fetching data:", err))
     }

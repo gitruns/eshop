@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios from '../../api/axiosConfig'
 import Category from './Category'
 
 function CategoryList() {
     const [categories, setCategories] = useState([])
 
     const fetchData = () => {
-        axios.get('https://api.escuelajs.co/api/v1/categories')
+        // axios.get('https://api.escuelajs.co/api/v1/categories')
+        axios.get('/api/categories')
             .then(res => setCategories(res.data))
             .catch(err => console.error("Error fetching data:", err))
     }
