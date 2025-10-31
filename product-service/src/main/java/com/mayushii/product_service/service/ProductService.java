@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProductService {
     ProductResponse addProduct(ProductRequest productRequest);
     List<ProductResponse> getAllProducts();
-    ProductResponse getProductById(Long productId);
+    ProductResponse getProductById(Long id);
 
-    void reduceQuantity(Long productId, Long quantity);
+    void reduceQuantity(Long id, Long quantity);
 }
