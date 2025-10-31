@@ -1,4 +1,4 @@
-package com.mayushii.auth_service.service.impl.impl;
+package com.mayushii.auth_service.service.impl;
 
 import com.mayushii.auth_service.entity.Role;
 import com.mayushii.auth_service.entity.User;
@@ -37,12 +37,10 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsernameOrEmail(),
-                        loginDto.getPassword()
-                )
-        );
+                        loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-//        return "User logged in successfully";
+        // return "User logged in successfully";
 
         String token = jwtTokenProvider.generateToken(authentication);
         return token;
@@ -51,7 +49,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterDto registerDto) {
         // add check for username and email exist in db
-        if (userRepository.existsByUsername(registerDto.getUsername())) {
+        // if (userRepository.existsByUsername(registerDto.getUsername())) {
+        if (userRepository.existsByUsername(registerDto.getName())) {
             throw new RuntimeException("Username is already in use!");
         }
         if (userRepository.existsByEmail(registerDto.getEmail())) {
@@ -61,10 +60,14 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setName(registerDto.getName());
         user.setEmail(registerDto.getEmail());
-        user.setUsername(registerDto.getUsername());
+        // user.setUsername(registerDto.getUsername());
+        user.setUsername(registerDto.getName());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+
         // set roles
-        Role userRole = roleRepository.findByName(registerDto.getRole())
+        String roleName = (registerDto.getRole() != null && !registerDto.getRole().isEmpty()) ? registerDto.getRole()
+                : "ROLE_USER";
+        Role userRole = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("No such role: " + registerDto.getRole()));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
