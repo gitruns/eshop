@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ProductService {
     @PutMapping("/{id}/reduce-quantity")
     public ResponseEntity<Void> reduceQuantity(@PathVariable Long id,
-                                               @RequestParam("quantity") Long quantity);
+            @RequestParam("quantity") Long quantity);
 }

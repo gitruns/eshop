@@ -1,56 +1,62 @@
-import { useEffect, useState } from 'react'
-import axios from '../../api/axiosConfig'
-import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { addToCart } from '../../redux/actions/cart-actions'
+import { useEffect, useState } from "react";
+import axios from "../../api/axiosConfig";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/actions/cart-actions";
 
 function ProductDetails() {
-    const [product, setProduct] = useState({})
-    // console.log(product)
-    const dispatch = useDispatch()
+  const [product, setProduct] = useState({});
+  // console.log(product)
+  const dispatch = useDispatch();
 
-    const { id } = useParams()
-    const fetchData = () => {
-        // axios.get('https://api.escuelajs.co/api/v1/products/' + id)
-        axios.get('/api/products/' + id)
-            .then(res => setProduct(res.data))
-            .catch(err => console.error("Error fetching data:", err))
-    }
+  const { id } = useParams();
+  const fetchData = () => {
+    // axios.get('https://api.escuelajs.co/api/v1/products/' + id)
+    axios
+      .get("/api/products/" + id)
+      .then((res) => setProduct(res.data))
+      .catch((err) => console.error("Error fetching data:", err));
+  };
 
-    useEffect(() => {
-        fetchData()
-    }, [id])
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
-    const onAddToCartHandler = () => {
-        dispatch(addToCart(product))
-    }
+  const onAddToCartHandler = () => {
+    dispatch(addToCart(product));
+  };
 
-    return (
-        <div className="container">
-            <div className="row mt-5">
-                <div className="col-6">
-                    <div className="wrapper">
-                        <img src={product.images} alt={product.productName} className="img-fluid" />
-                    </div>
-                </div>
-                <div className="col-6">
-                    <div className="wrapper">
-                        <h2>{product.productName}</h2>
-                        <span class="badge badge-secondary">{product?.category?.name}</span>
-                        <p>{product.description}</p>
-                        <div className="d-flex justify-content-between align-items-center">
-                            <p className="card-text mb-0">${product.price}</p>
-                            <button onClick={onAddToCartHandler} className="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="container">
+      <div className="row mt-5">
+        <div className="col-6">
+          <div className="wrapper">
+            <img
+              src={product.images}
+              alt={product.productName}
+              className="img-fluid"
+            />
+          </div>
         </div>
-    )
+        <div className="col-6">
+          <div className="wrapper">
+            <h2>{product.productName}</h2>
+            <span class="badge badge-secondary">{product?.category?.name}</span>
+            <p>{product.description}</p>
+            <div className="d-flex justify-content-between align-items-center">
+              <p className="card-text mb-0">${product.price}</p>
+              <button onClick={onAddToCartHandler} className="btn btn-primary">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default ProductDetails
-
+export default ProductDetails;
 
 // import { useEffect, useState } from 'react'
 // import axios from 'axios'

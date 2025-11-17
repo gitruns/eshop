@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 public class ProductController {
     private final ProductServiceImpl productService;
+
     ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
@@ -37,7 +38,7 @@ public class ProductController {
 
     @PutMapping("/{id}/reduce-quantity")
     public ResponseEntity<Void> reduceQuantity(@PathVariable Long id,
-                                               @RequestParam("quantity") Long quantity) {
+            @RequestParam("quantity") Long quantity) {
         productService.reduceQuantity(id, quantity);
         return ResponseEntity.noContent().build();
     }

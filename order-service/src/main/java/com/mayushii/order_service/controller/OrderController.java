@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OrderController {
     private OrderServiceImpl orderService;
+
     OrderController(OrderServiceImpl orderService) {
         this.orderService = orderService;
     }
-
 
     @PostMapping("/placed")
     public ResponseEntity<Long> placeOrder(@RequestBody OrderRequest orderRequest) {

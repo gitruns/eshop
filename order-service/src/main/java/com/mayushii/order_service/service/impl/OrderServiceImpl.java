@@ -38,7 +38,8 @@ public class OrderServiceImpl implements OrderService {
         // 3. call the product service to reduce the inventory (block the quantity)
         order = orderRepository.save(order);
 
-        // 3. call the payment service to make the payment; if success update the order status to PLACED
+        // 3. call the payment service to make the payment; if success update the order
+        // status to PLACED
 
         // 4. if payment fails update the order status to PAYMENT_FAILED
 

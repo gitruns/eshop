@@ -2,12 +2,12 @@ import Navbar from "../../components/Navbar";
 import ProductList from "../../components/ProductList";
 
 function ProductPage() {
-    return (
-        <>
-            <Navbar />
-            <ProductList />
-        </>
-    )
+  return (
+    <>
+      <Navbar />
+      <ProductList />
+    </>
+  );
 }
 
-export default ProductPage
+export default ProductPage;

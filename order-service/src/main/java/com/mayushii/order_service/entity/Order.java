@@ -12,23 +12,19 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(
-        name = "orders"
-)
+@Table(name = "orders")
 public class Order {
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    private Long productId;
+        private Long productId;
 
-    private Long quantity;
+        private Long quantity;
 
-    private Instant orderDate;
+        private Instant orderDate;
 
-    private String orderStatus;
+        private String orderStatus;
 
-    private BigDecimal amount;
+        private BigDecimal amount;
 }

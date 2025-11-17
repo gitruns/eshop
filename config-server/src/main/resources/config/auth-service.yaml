@@ -11,11 +11,11 @@ eureka:
     hostname: localhost
 
 spring:
-#  security:
-#    user:
-#      name: admin
-#      password: admin123
-#      roles: ADMIN
+  #  security:
+  #    user:
+  #      name: admin
+  #      password: admin123
+  #      roles: ADMIN
   datasource:
     url: jdbc:mysql://localhost:3307/authdb?createDatabaseIfNotExist=true
     username: root
