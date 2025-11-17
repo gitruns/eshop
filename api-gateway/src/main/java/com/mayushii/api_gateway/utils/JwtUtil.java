@@ -10,7 +10,6 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtUtil {
     private String jwtSecret = "dGhpcyBpcyB0aGUgand0IHNlY3JldCBrZXkgZm9yIGltcGxlbWVudGluZyBqd3QgdG9rZW5zIHN5c3RlbSBpbiBhdXRoIHNlcnZpY2U=";
-    private Long jwtExpirationInMs = java.time.Duration.ofDays(7).toMillis();
 
     public void validateToken(final String token) {
         Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);

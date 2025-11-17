@@ -2,7 +2,6 @@ package com.mayushii.payment_service.controller;
 
 import com.mayushii.payment_service.model.PaymentRequest;
 import com.mayushii.payment_service.service.impl.PaymentServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -23,12 +23,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         return ((exchange, chain) -> {
             if (routeValidator.isSecured.test(exchange.getRequest())) {
                 // header contains token or not
-                if (!exchange.getRequest().getHeaders().containsKey("Authorization")) {
+                String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+                if (authHeader == null) {
                     throw new RuntimeException("Missing authorization header");
                 }
-
-                String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                if (authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }
                 try {
