@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,8 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    // @Autowired
+    // private UserDetailsService userDetailsService;
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
@@ -30,17 +29,14 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-                .authorizeHttpRequests((authorize) ->
-                        // authorize.anyRequest().authenticated()
-                        authorize
-                                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                                .anyRequest().authenticated()
-                )//.httpBasic(Customizer.withDefaults());
+        httpSecurity.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        // .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .anyRequest().authenticated())// .httpBasic(Customizer.withDefaults());
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
@@ -49,19 +45,18 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails john = User.builder()
-//                .username("john")
-//                .password(passwordEncoder().encode("john123"))
-//                .roles("USER")
-//                .build();
-//        return new InMemoryUserDetailsManager(john);
-//    }
+    // @Bean
+    // public UserDetailsService userDetailsService() {
+    // UserDetails john = User.builder()
+    // .username("john")
+    // .password(passwordEncoder().encode("john123"))
+    // .roles("USER")
+    // .build();
+    // return new InMemoryUserDetailsManager(john);
+    // }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 }
-
