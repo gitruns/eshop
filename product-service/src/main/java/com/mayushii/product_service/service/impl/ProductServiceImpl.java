@@ -9,11 +9,8 @@ import com.mayushii.product_service.model.ProductResponse;
 import com.mayushii.product_service.repository.ProductRepository;
 import com.mayushii.product_service.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,12 +22,11 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
 
-    @Autowired
-    private CategoryService categoryService;
-
-    ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
+        this.categoryService = categoryService;
     }
 
     @Override
