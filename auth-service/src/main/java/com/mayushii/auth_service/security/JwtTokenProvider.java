@@ -6,16 +6,23 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
-    private String jwtSecret = "dGhpcyBpcyB0aGUgand0IHNlY3JldCBrZXkgZm9yIGltcGxlbWVudGluZyBqd3QgdG9rZW5zIHN5c3RlbSBpbiBhdXRoIHNlcnZpY2U=";
-    private Long jwtExpirationInMs = java.time.Duration.ofDays(7).toMillis();
+    @Value("${jwt.secret:dGhpcyBpcyB0aGUgand0IHNlY3JldCBrZXkgZm9yIGltcGxlbWVudGluZyBqd3QgdG9rZW5zIHN5c3RlbSBpbiBhdXRoIHNlcnZpY2U=}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration:#{7*24*60*60*1000}}")
+    private Long jwtExpirationInMs;
 
     // generate token
     public String generateToken(Authentication authentication) {
@@ -58,16 +65,11 @@ public class JwtTokenProvider {
                     .build()
                     .parse(token);
             return true;
-        } catch (MalformedJwtException ex) {
-            throw new RuntimeException("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            throw new RuntimeException("Expired JWT token");
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException("JWT claims string is empty");
-        } catch (UnsupportedJwtException ex) {
-            throw new RuntimeException("JWT token is unsupported");
+        } catch (MalformedJwtException | ExpiredJwtException | IllegalArgumentException | UnsupportedJwtException ex) {
+            return false;
         } catch (Exception ex) {
-            throw new RuntimeException("JWT token validation failed");
+            log.error("Unexpected JWT validation error", ex);
+            return false;
         }
     }
 }

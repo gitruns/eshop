@@ -53,8 +53,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterDto registerDto) {
         // add check for username and email exist in db
-        // if (userRepository.existsByUsername(registerDto.getUsername())) {
-        if (userRepository.existsByUsername(registerDto.getName())) {
+        if (userRepository.existsByUsername(registerDto.getUsername())) {
             throw new RuntimeException("Username is already in use!");
         }
         if (userRepository.existsByEmail(registerDto.getEmail())) {
@@ -64,8 +63,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setName(registerDto.getName());
         user.setEmail(registerDto.getEmail());
-        // user.setUsername(registerDto.getUsername());
-        user.setUsername(registerDto.getName());
+        user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
         // set roles

@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./styles.css";
@@ -6,18 +7,23 @@ import axios from "axios";
 
 function RegisterPage() {
   const navigate = useNavigate();
+  const [registrationError, setRegistrationError] = useState("");
 
   const initialValues = {
-    firstName: "",
+    name: "",
+    username: "",
     email: "",
-    mobile: "",
     password: "",
   };
 
   const onSubmit = (values) => {
+    // Clear any previous errors
+    setRegistrationError("");
+
     // map to backend DTO
     const registerPayload = {
-      name: values.firstName,
+      name: values.name,
+      username: values.username,
       email: values.email,
       password: values.password,
       role: "ROLE_USER", // Default role
@@ -30,7 +36,14 @@ function RegisterPage() {
         navigate("/login");
       })
       .catch((error) => {
-        console.error("Registration failed:", error.response.data);
+        console.error("Registration failed:", error.response?.data);
+        if (error.response?.data) {
+          setRegistrationError(error.response.data);
+        } else {
+          setRegistrationError(
+            "An error occurred during registration. Please try again."
+          );
+        }
       });
 
     console.log(values);
@@ -59,13 +72,15 @@ function RegisterPage() {
   //     return errors
   // }
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("First Name is required"),
+    name: Yup.string()
+      .required("Name is required")
+      .min(2, "Name must be at least 2 characters"),
+    username: Yup.string()
+      .required("Username is required")
+      .min(3, "Username must be at least 3 characters"),
     email: Yup.string()
       .email("Invalid email format")
       .required("Email is required"),
-    mobile: Yup.string()
-      .required("Mobile is required")
-      .min(10, "Mobile number must be 10 digits"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters"),
@@ -79,9 +94,9 @@ function RegisterPage() {
     validateOnMount: true,
   });
 
-  const firstNameError = formik.errors.firstName && formik.touched.firstName;
+  const nameError = formik.errors.name && formik.touched.name;
+  const usernameError = formik.errors.username && formik.touched.username;
   const emailError = formik.errors.email && formik.touched.email;
-  const mobileError = formik.errors.mobile && formik.touched.mobile;
   const passwordError = formik.errors.password && formik.touched.password;
 
   return (
@@ -94,20 +109,34 @@ function RegisterPage() {
             <hr />
             <form onSubmit={formik.handleSubmit}>
               <div className="form-group">
-                <label>First Name</label>
+                <label>Name</label>
                 <input
                   type="text"
-                  name="firstName"
-                  className={`form-control${
-                    firstNameError ? " is-invalid" : ""
-                  }`}
-                  value={formik.values.firstName}
+                  name="name"
+                  className={`form-control${nameError ? " is-invalid" : ""}`}
+                  value={formik.values.name}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
               </div>
-              {firstNameError ? (
-                <small className="text-danger">{formik.errors.firstName}</small>
+              {nameError ? (
+                <small className="text-danger">{formik.errors.name}</small>
+              ) : null}
+              <div className="form-group">
+                <label>Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  className={`form-control${
+                    usernameError ? " is-invalid" : ""
+                  }`}
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              {usernameError ? (
+                <small className="text-danger">{formik.errors.username}</small>
               ) : null}
               <div className="form-group">
                 <label>Email</label>
@@ -122,20 +151,6 @@ function RegisterPage() {
               </div>
               {emailError ? (
                 <small className="text-danger">{formik.errors.email}</small>
-              ) : null}
-              <div className="form-group">
-                <label>Mobile</label>
-                <input
-                  type="tel"
-                  name="mobile"
-                  className={`form-control${mobileError ? " is-invalid" : ""}`}
-                  value={formik.values.mobile}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </div>
-              {mobileError ? (
-                <small className="text-danger">{formik.errors.mobile}</small>
               ) : null}
               <div className="form-group">
                 <label>Password</label>
@@ -160,6 +175,11 @@ function RegisterPage() {
                 disabled={!formik.isValid}
               />
             </form>
+            {registrationError && (
+              <div className="alert alert-danger mt-3" role="alert">
+                {registrationError}
+              </div>
+            )}
             <div className="mt-2 text-center">
               <p>
                 Already Registered? <Link to="/login">Login</Link>

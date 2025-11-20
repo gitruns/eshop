@@ -35,7 +35,6 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        // .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .anyRequest().authenticated())// .httpBasic(Customizer.withDefaults());
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
