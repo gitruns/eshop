@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Data
 public class PaymentRequest {
     private Long orderId;
-    private Long amount;
+    private BigDecimal amount;
     private String referenceNumber;
     private PaymentMethod paymentMode;
 }

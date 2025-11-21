@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -33,5 +34,5 @@ public class TransactionDetail {
         private String paymentStatus;
 
         @Column(nullable = false)
-        private Long amount;
+        private BigDecimal amount;
 }

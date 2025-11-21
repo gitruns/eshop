@@ -18,3 +18,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+payment:
+  simulation:
+    success-rate: 70
+    min-delay-ms: 500
+    max-delay-ms: 2000
