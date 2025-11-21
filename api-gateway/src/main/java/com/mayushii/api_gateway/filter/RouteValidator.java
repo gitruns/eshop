@@ -1,5 +1,6 @@
 package com.mayushii.api_gateway.filter;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,16 @@ public class RouteValidator {
                         "/auth/login",
                         "/eureka");
 
-        public Predicate<ServerHttpRequest> isSecured = request -> openApiEndpoints
-                        .stream()
-                        .noneMatch(uri -> request.getURI().getPath().contains(uri));
+        // true = secured (auth required), false = open
+        public Predicate<ServerHttpRequest> isSecured = request -> {
+                String path = request.getURI().getPath();
+
+                boolean isOpenPath = openApiEndpoints.stream()
+                                .anyMatch(path::contains);
+
+                boolean isGet = HttpMethod.GET.equals(request.getMethod());
+
+                // secured only if NOT an open path AND NOT a GET
+                return !(isOpenPath || isGet);
+        };
 }

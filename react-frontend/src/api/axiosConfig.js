@@ -5,7 +5,7 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:9191", // API Gateway URL
 });
 
-// Add a request interceptor
+// authorize requests
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get the token from local storage
@@ -20,6 +20,21 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // Do something with request error
+    return Promise.reject(error);
+  }
+);
+
+// handle 401 unauthorized
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Token invalid or expired, redirect to login
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
     return Promise.reject(error);
   }
 );
