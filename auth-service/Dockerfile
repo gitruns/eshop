@@ -24,7 +24,7 @@ COPY --from=build /layers/snapshot-dependencies/ ./
 COPY --from=build /layers/spring-boot-loader/ ./
 COPY --from=build /layers/application/ ./
 
-EXPOSE 9191
+EXPOSE 8081
 
 ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75 -Djava.net.preferIPv4Stack=true"
 

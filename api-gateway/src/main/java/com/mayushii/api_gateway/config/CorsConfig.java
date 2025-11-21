@@ -15,7 +15,8 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         // Allow requests from the React frontend
-        corsConfig.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost.localdomain:3000"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost.localdomain:3000",
+                "http://localhost:3333", "http://localhost.localdomain:3333"));
         corsConfig.setMaxAge(3600L); // Cache the preflight response for 1 hour
         corsConfig.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
         corsConfig.addAllowedHeader("*"); // Allow all headers

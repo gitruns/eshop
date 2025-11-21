@@ -1,0 +1,180 @@
+x-client-common:
+  &client-common # Tells all clients how to reach Config Server INSIDE Docker
+  CONFIG_SERVER_URL: "http://config-server:9000"
+  # Overrides localhost-based Eureka URL from config files
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+
+x-jpa-common: &jpa-common
+  SPRING_DATASOURCE_USERNAME: root
+  SPRING_DATASOURCE_PASSWORD: root
+  SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - eshop-network
+
+  service-registry:
+    build: ./service-registry
+    container_name: service-registry
+    restart: unless-stopped
+    environment:
+      SPRING_APPLICATION_NAME: service-registry
+      # Standalone Eureka server
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+    ports:
+      - "8761:8761"
+    networks:
+      - eshop-network
+
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - service-registry
+    environment:
+      SPRING_APPLICATION_NAME: config-server
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+    ports:
+      - "9000:9000"
+    networks:
+      - eshop-network
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - service-registry
+      - config-server
+    environment:
+      <<:
+        - *client-common
+        - *jpa-common
+      SPRING_APPLICATION_NAME: auth-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/authdb?createDatabaseIfNotExist=true
+    networks:
+      - eshop-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - service-registry
+      - config-server
+    environment:
+      <<:
+        - *client-common
+        - *jpa-common
+      SPRING_APPLICATION_NAME: product-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/productdb?createDatabaseIfNotExist=true
+    networks:
+      - eshop-network
+
+  category-service:
+    build: ./category-service
+    container_name: category-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - service-registry
+      - config-server
+    environment:
+      <<:
+        - *client-common
+        - *jpa-common
+      SPRING_APPLICATION_NAME: category-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/categorydb?createDatabaseIfNotExist=true
+    networks:
+      - eshop-network
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - service-registry
+      - config-server
+    environment:
+      <<:
+        - *client-common
+        - *jpa-common
+      SPRING_APPLICATION_NAME: order-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/orderdb?createDatabaseIfNotExist=true
+    networks:
+      - eshop-network
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - service-registry
+      - config-server
+    environment:
+      <<:
+        - *client-common
+        - *jpa-common
+      SPRING_APPLICATION_NAME: payment-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/paymentdb?createDatabaseIfNotExist=true
+    networks:
+      - eshop-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: unless-stopped
+    depends_on:
+      - auth-service
+      - product-service
+      - category-service
+      - order-service
+      - payment-service
+      - config-server
+      - service-registry
+    environment:
+      <<: *client-common
+      SPRING_APPLICATION_NAME: api-gateway
+      SERVER_PORT: 9191 # ensure port inside container
+    ports:
+      - "9191:9191"
+    networks:
+      - eshop-network
+
+  react-frontend:
+    build:
+      context: react-frontend
+    ports:
+      - "3333:80"
+    environment:
+      REACT_APP_API_BASE_URL: http://localhost:9191
+    networks:
+      - eshop-network
+    depends_on:
+      - api-gateway
+
+volumes:
+  mysql_data:
+
+networks:
+  eshop-network:
+    driver: bridge
