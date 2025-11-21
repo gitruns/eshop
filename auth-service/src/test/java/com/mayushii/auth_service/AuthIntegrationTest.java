@@ -32,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
                 "jwt.secret=dGVzdC1zZWNyZXQta2V5LXRoYXQtaXMtc3VmZmljaWVudGx5LWxvbmctZm9yLWhzMjU2", // base64 encoded
                 "app.jwt-secret=dGVzdC1zZWNyZXQta2V5LXRoYXQtaXMtc3VmZmljaWVudGx5LWxvbmctZm9yLWhzMjU2", // base64 encoded
                 "eureka.client.enabled=false",
-                "spring.cloud.config.enabled=false",
                 "spring.cloud.discovery.enabled=false",
                 "eureka.client.register-with-eureka=false"
 })
