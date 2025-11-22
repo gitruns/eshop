@@ -1,30 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "../../api/axiosConfig";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/actions/cart-actions";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, decreaseQuantity } from "../../redux/actions/cart-actions";
 
 function ProductDetails() {
   const [product, setProduct] = useState({});
   // console.log(product)
   const dispatch = useDispatch();
+  const carts = useSelector((state) => state.carts);
 
   const { id } = useParams();
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     // axios.get('https://api.escuelajs.co/api/v1/products/' + id)
     axios
       .get("/api/products/" + id)
       .then((res) => setProduct(res.data))
       .catch((err) => console.error("Error fetching data:", err));
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [fetchData]);
 
-  const onAddToCartHandler = () => {
-    dispatch(addToCart(product));
-  };
+  const onAddHandler = () => dispatch(addToCart(product));
+  const onRemoveHandler = () => dispatch(decreaseQuantity(product));
+
+  const cartItem = carts.find((item) => item.id === product.id);
 
   return (
     <div className="container">
@@ -45,9 +47,37 @@ function ProductDetails() {
             <p>{product.description}</p>
             <div className="d-flex justify-content-between align-items-center">
               <p className="card-text mb-0">${product.price}</p>
-              <button onClick={onAddToCartHandler} className="btn btn-primary">
-                Add to Cart
-              </button>
+              {cartItem ? (
+                <div className="input-group quantity-group">
+                  <button
+                    onClick={onRemoveHandler}
+                    className="btn btn-outline-secondary small-square-button quantity-left"
+                    type="button"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="text"
+                    className="form-control add-sub-input"
+                    value={cartItem.quantity}
+                    readOnly
+                  />
+                  <button
+                    onClick={onAddHandler}
+                    className="btn btn-outline-secondary small-square-button quantity-right"
+                    type="button"
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={onAddHandler}
+                  className="btn btn-primary small-button"
+                >
+                  Add to Cart
+                </button>
+              )}
             </div>
           </div>
         </div>

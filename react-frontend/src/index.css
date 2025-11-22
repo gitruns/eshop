@@ -37,6 +37,14 @@ code {
 }
 
 .small-button {
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-md);
+  border-radius: var(--border-radius-sm);
+}
+.small-square-button {
   width: 30px !important;
   height: 30px !important;
   padding: 0 !important;
@@ -45,4 +53,20 @@ code {
   justify-content: center;
   font-size: var(--font-size-md);
   border-radius: var(--border-radius-sm);
+}
+
+.quantity-group {
+  width: 110px;
+}
+.quantity-group input {
+  height: 30px;
+  text-align: center;
+}
+.quantity-left {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.quantity-right {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
 }

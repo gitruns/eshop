@@ -40,7 +40,7 @@ function Item({ data }) {
             </Link>
             <button
               onClick={onDeleteHandler}
-              className="btn btn-outline-danger btn-sm small-button"
+              className="btn btn-outline-danger btn-sm small-square-button"
             >
               &times;
             </button>
@@ -51,7 +51,7 @@ function Item({ data }) {
             <div className="input-group quantity-group">
               <button
                 onClick={onRemoveHandler}
-                className="btn btn-outline-secondary small-button quantity-left"
+                className="btn btn-outline-secondary small-square-button quantity-left"
                 type="button"
               >
                 -
@@ -64,7 +64,7 @@ function Item({ data }) {
               />
               <button
                 onClick={onAddHandler}
-                className="btn btn-outline-secondary small-button quantity-right"
+                className="btn btn-outline-secondary small-square-button quantity-right"
                 type="button"
               >
                 +

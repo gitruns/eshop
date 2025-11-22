@@ -1,7 +1,20 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  decreaseQuantity,
+} from "../../../redux/actions/cart-actions";
 
 function Product({ data }) {
   const { id, productName, images, category, price } = data;
+  const dispatch = useDispatch();
+  const carts = useSelector((state) => state.carts);
+
+  const onAddHandler = () => dispatch(addToCart(data));
+  const onRemoveHandler = () => dispatch(decreaseQuantity(data));
+
+  const cartItem = carts.find((item) => item.id === data.id);
+
   return (
     <div className="col-sm-3" style={{ marginBottom: "var(--spacing-xl)" }}>
       <div
@@ -14,15 +27,17 @@ function Product({ data }) {
           overflow: "hidden",
         }}
       >
-        <img
-          src={images}
-          className="card-img-top"
-          alt={productName}
-          style={{
-            height: "var(--spacing-xxxxl)",
-            objectFit: "cover",
-          }}
-        />
+        <Link to={`/products/${id}`} style={{ textDecoration: "none" }}>
+          <img
+            src={images}
+            className="card-img-top"
+            alt={productName}
+            style={{
+              height: "var(--spacing-xxxxl)",
+              objectFit: "cover",
+            }}
+          />
+        </Link>
         <div
           className="card-body"
           style={{
@@ -35,17 +50,19 @@ function Product({ data }) {
           }}
         >
           <div>
-            <h5
-              className="card-title"
-              style={{
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--font-weight-semibold)",
-                marginBottom: "var(--spacing-sm)",
-                color: "var(--color-grey-900)",
-              }}
-            >
-              {productName}
-            </h5>
+            <Link to={`/products/${id}`} style={{ textDecoration: "none" }}>
+              <h5
+                className="card-title"
+                style={{
+                  fontSize: "var(--font-size-xl)",
+                  fontWeight: "var(--font-weight-semibold)",
+                  marginBottom: "var(--spacing-sm)",
+                  color: "var(--color-grey-900)",
+                }}
+              >
+                {productName}
+              </h5>
+            </Link>
             <span
               className="badge badge-secondary"
               style={{
@@ -72,17 +89,37 @@ function Product({ data }) {
             >
               ${price}
             </p>
-            <Link
-              to={`/products/${id}`}
-              className="btn btn-primary"
-              style={{
-                borderRadius: "var(--border-radius-md)",
-                padding: "var(--spacing-sm) var(--spacing-md)",
-                fontSize: "var(--font-size-md)",
-              }}
-            >
-              View
-            </Link>
+            {cartItem ? (
+              <div className="input-group quantity-group">
+                <button
+                  onClick={onRemoveHandler}
+                  className="btn btn-outline-secondary small-square-button quantity-left"
+                  type="button"
+                >
+                  -
+                </button>
+                <input
+                  type="text"
+                  className="form-control add-sub-input"
+                  value={cartItem.quantity}
+                  readOnly
+                />
+                <button
+                  onClick={onAddHandler}
+                  className="btn btn-outline-secondary small-square-button quantity-right"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onAddHandler}
+                className="btn btn-primary small-button px-2"
+              >
+                Add
+              </button>
+            )}
           </div>
         </div>
       </div>

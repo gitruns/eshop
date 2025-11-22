@@ -5,29 +5,11 @@
   border-radius: var(--border-radius-md);
 }
 
-.add-sub-input {
-  width: 50px;
-  height: 30px;
-  text-align: center;
-}
-
 .cart-item-card {
   background-color: var(--bg-primary);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);
   margin-bottom: var(--spacing-lg);
-}
-
-.quantity-group {
-  width: 110px;
-}
-.quantity-left {
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-.quantity-right {
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
 }
 
 .cart-item-wrapper {
