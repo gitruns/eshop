@@ -1,6 +1,7 @@
 package com.mayushii.order_service.controller;
 
 import com.mayushii.order_service.service.impl.OrderServiceImpl;
+import com.mayushii.order_service.model.CheckoutRequest;
 import com.mayushii.order_service.model.OrderRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,12 @@ public class OrderController {
     @PostMapping("/placed")
     public ResponseEntity<Long> placeOrder(@RequestBody OrderRequest orderRequest) {
         Long orderId = orderService.placeOrder(orderRequest);
+        return new ResponseEntity<>(orderId, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<Long> checkout(@RequestBody CheckoutRequest checkoutRequest) {
+        Long orderId = orderService.checkoutOrder(checkoutRequest);
         return new ResponseEntity<>(orderId, HttpStatus.CREATED);
     }
 }

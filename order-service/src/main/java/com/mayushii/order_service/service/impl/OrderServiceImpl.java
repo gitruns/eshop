@@ -3,7 +3,9 @@ package com.mayushii.order_service.service.impl;
 import com.mayushii.order_service.entity.Order;
 import com.mayushii.order_service.external.client.PaymentService;
 import com.mayushii.order_service.external.client.ProductService;
+import com.mayushii.order_service.model.CheckoutRequest;
 import com.mayushii.order_service.model.OrderStatus;
+import com.mayushii.order_service.model.PaymentMethod;
 import com.mayushii.order_service.repository.OrderRepository;
 import com.mayushii.order_service.service.OrderService;
 import com.mayushii.order_service.model.OrderRequest;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -79,5 +82,84 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return order.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long checkoutOrder(CheckoutRequest checkoutRequest) {
+        log.info("Starting checkout for {} items, total amount: {}",
+                checkoutRequest.getCartItems().size(), checkoutRequest.getTotalAmount());
+
+        Long firstOrderId = null;
+
+        // Process each cart item as a separate order
+        for (CheckoutRequest.CartItem cartItem : checkoutRequest.getCartItems()) {
+            try {
+                // Reduce product quantity
+                productService.reduceQuantity(cartItem.getProductId(), cartItem.getQuantity().longValue());
+
+                // Create order
+                Order order = new Order();
+                order.setAmount(cartItem.getPrice().multiply(new java.math.BigDecimal(cartItem.getQuantity())));
+                order.setProductId(cartItem.getProductId());
+                order.setQuantity(cartItem.getQuantity().longValue());
+                order.setOrderDate(Instant.now());
+                order.setOrderStatus(OrderStatus.CREATED.name());
+
+                order = orderRepository.save(order);
+                if (firstOrderId == null) {
+                    firstOrderId = order.getId();
+                }
+
+                log.info("Order saved with id: {}, status: {}", order.getId(), order.getOrderStatus());
+            } catch (Exception e) {
+                log.error("Failed to process order item: productId={}, quantity={}",
+                        cartItem.getProductId(), cartItem.getQuantity(), e);
+                throw new RuntimeException("Order processing failed: " + e.getMessage(), e);
+            }
+        }
+
+        // Process payment for the entire checkout
+        try {
+            PaymentService.PaymentRequest paymentRequest = new PaymentService.PaymentRequest();
+            paymentRequest.setOrderId(firstOrderId);
+            paymentRequest.setAmount(checkoutRequest.getTotalAmount());
+            paymentRequest.setReferenceNumber(UUID.randomUUID().toString());
+            // Map the payment method from checkout to existing PaymentMethod enum
+            PaymentMethod paymentMethod = PaymentMethod.valueOf(checkoutRequest.getPaymentInfo().getMethod());
+            paymentRequest.setPaymentMode(paymentMethod);
+
+            var paymentResponse = paymentService.doPayment(paymentRequest);
+            Long transactionId = paymentResponse.getBody();
+
+            // Update all orders to PLACED status
+            List<Order> orders = orderRepository.findByOrderStatus(OrderStatus.CREATED.name());
+            for (Order order : orders) {
+                if (order.getId() >= firstOrderId) { // Assuming sequential IDs
+                    order.setOrderStatus(OrderStatus.PLACED.name());
+                    order.setOrderDate(Instant.now());
+                    orderRepository.save(order);
+                }
+            }
+
+            log.info("Payment successful for checkout, first order ID: {}, transactionId: {}",
+                    firstOrderId, transactionId);
+
+        } catch (FeignException e) {
+            // Payment failed - update all orders to PAYMENT_FAILED
+            List<Order> orders = orderRepository.findByOrderStatus(OrderStatus.CREATED.name());
+            for (Order order : orders) {
+                if (order.getId() >= firstOrderId) {
+                    order.setOrderStatus(OrderStatus.PAYMENT_FAILED.name());
+                    order.setOrderDate(Instant.now());
+                    orderRepository.save(order);
+                }
+            }
+
+            log.error("Payment failed for checkout starting orderId: {}, error: {}", firstOrderId, e.getMessage());
+            throw new RuntimeException("Payment processing failed: " + e.getMessage(), e);
+        }
+
+        return firstOrderId;
     }
 }

@@ -13,6 +13,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ProductServiceException.class)
     public ResponseEntity<ErrorDetail> handleProductServiceException(ProductServiceException ex) {
         ErrorDetail errorDetail = new ErrorDetail(ex.getMessage(), ex.getErrorCode());
-        return new ResponseEntity<>(errorDetail, HttpStatus.NOT_FOUND);
+        HttpStatus status = ex.getErrorCode().equals("PRODUCT_NOT_FOUND") ? HttpStatus.NOT_FOUND
+                : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(errorDetail, status);
     }
 }

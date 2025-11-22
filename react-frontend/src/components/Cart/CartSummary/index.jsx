@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { clearCart } from "../../../redux/actions/cart-actions";
 
 function CartSummary() {
@@ -8,9 +9,14 @@ function CartSummary() {
   const shipping = 13.71;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onClearCartHandler = () => {
     dispatch(clearCart());
+  };
+
+  const onCheckoutHandler = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -54,6 +60,7 @@ function CartSummary() {
           <span>${total + shipping}</span>
         </div>
         <button
+          onClick={onCheckoutHandler}
           className="btn btn-primary w-100 mt-3"
           style={{
             borderRadius: "var(--border-radius-md)",
