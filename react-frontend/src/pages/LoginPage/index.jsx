@@ -74,47 +74,43 @@ function LoginPage() {
               validateOnMount={true}
             >
               {(formik) => {
-                const getClasses = (fieldName) => {
-                  return `form-control${
-                    formik.errors[fieldName] && formik.touched[fieldName]
-                      ? " is-invalid"
-                      : ""
-                  }`;
-                };
-
                 return (
                   <Form>
-                    <div className="form-group">
-                      <label>Email</label>
+                    <div className="form-group mb-4">
+                      <label className="fw-medium text-dark mb-2">Email</label>
                       <Field
                         type="email"
                         name="email"
-                        // className={`form-control${emailError ? ' is-invalid' : ''}`}
-                        className={getClasses("email")}
+                        className="form-control rounded-lg py-sm-custom px-md-custom"
                       />
                       <ErrorMessage name="email">
-                        {(msg) => <small className="text-danger">{msg}</small>}
+                        {(msg) => (
+                          <small className="text-danger mt-1">{msg}</small>
+                        )}
                       </ErrorMessage>
                     </div>
-                    <div className="form-group">
-                      <label>Password</label>
+                    <div className="form-group mb-4">
+                      <label className="fw-medium text-dark mb-2">
+                        Password
+                      </label>
                       <Field
                         type="password"
                         name="password"
-                        // className={`form-control${passwordError ? ' is-invalid' : ''}`}
-                        // className={`form-control${formik.errors.password && formik.touched.password ? ' is-invalid' : ''}`}
-                        className={getClasses("password")}
+                        className="form-control rounded-lg py-sm-custom px-md-custom"
                       />
                       <ErrorMessage name="password">
-                        {(msg) => <small className="text-danger">{msg}</small>}
+                        {(msg) => (
+                          <small className="text-danger mt-1">{msg}</small>
+                        )}
                       </ErrorMessage>
                     </div>
-                    <input
+                    <button
                       type="submit"
-                      value="Login"
-                      className="btn btn-primary btn-block"
+                      className="btn btn-primary w-100 fw-medium rounded-lg mt-4 py-sm-custom px-md-custom"
                       disabled={!formik.isValid}
-                    />
+                    >
+                      Login
+                    </button>
                   </Form>
                 );
               }}

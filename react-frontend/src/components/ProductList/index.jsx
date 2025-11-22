@@ -18,9 +18,14 @@ function ProductList() {
   }, []);
 
   return (
-    <div className="container">
-      <h1 className="text-center">Product List</h1>
-      <div className="row">
+    <div
+      className="container"
+      style={{
+        paddingTop: "var(--spacing-lg)",
+        paddingBottom: "var(--spacing-lg)",
+      }}
+    >
+      <div className="row align-items-stretch">
         {products.map((product) => (
           <Product key={product.id} data={product} />
         ))}

@@ -24,8 +24,8 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <Link className="navbar-brand" to="/">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-2 py-1">
+      <Link className="navbar-brand px-0" to="/">
         EShop
       </Link>
       <button
@@ -42,14 +42,11 @@ function Navbar() {
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li className="nav-item active">
-            <Link className="nav-link" to="/">
-              Home <span className="sr-only">(current)</span>
+          <li className="nav-item">
+            <Link className="nav-link" to="/products">
+              Products <span className="sr-only">(current)</span>
             </Link>
           </li>
-          {/* <li className="nav-item"> */}
-          {/*     <Link className="nav-link" to="/products">Products <span className="sr-only">(current)</span></Link> */}
-          {/* </li> */}
           <li className="nav-item">
             <Link className="nav-link" to="/about">
               About <span className="sr-only">(current)</span>
@@ -61,34 +58,34 @@ function Navbar() {
             </Link>
           </li>
         </ul>
-        <div className="form-inline my-2 my-lg-0">
+        <div className="form-inline d-flex align-items-center">
           <Link
             to="/cart"
             className={
-              "btn mr-2 position-relative" +
-              (cart.length > 0 ? " btn-success" : " btn-outline-success")
+              "btn mr-2 position-relative d-flex align-items-center justify-content-center rounded-lg p-2 " +
+              (cart.length > 0 ? "btn-success" : "btn-outline-success")
             }
           >
             <i className="bx bx-cart bx-sm"></i>
             {cart.length > 0 && (
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger badge-custom-padding">
                 {cart.length}
               </span>
             )}
           </Link>
 
-          {/* <Link to="/cart" className="btn btn-outline-success mr-2">Cart ({cart.length})</Link> */}
-          {/* <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" /> */}
-          {/* <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> */}
           {isLoggedIn ? (
             <button
-              className="btn btn-outline-danger"
+              className="btn btn-outline-danger d-flex align-items-center rounded-lg py-sm-custom px-md-custom"
               onClick={onLogoutHandler}
             >
               Logout
             </button>
           ) : (
-            <Link to="/login" className="btn btn-outline-success">
+            <Link
+              to="/login"
+              className="btn btn-outline-success d-flex align-items-center rounded-lg py-sm-custom px-md-custom"
+            >
               Login
             </Link>
           )}
