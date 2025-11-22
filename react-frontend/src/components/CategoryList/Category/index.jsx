@@ -5,7 +5,10 @@ function Category({ data }) {
   // const { id, name, image } = data
   return (
     <div className="col-sm-3" style={{ marginBottom: "var(--spacing-xl)" }}>
-      <Link to="/products" style={{ textDecoration: "none" }}>
+      <Link
+        to={`/products?category=${encodeURIComponent(name)}`}
+        style={{ textDecoration: "none" }}
+      >
         <div
           className="card h-100"
           style={{
