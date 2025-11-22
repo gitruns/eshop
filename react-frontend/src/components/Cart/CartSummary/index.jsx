@@ -57,7 +57,7 @@ function CartSummary() {
         </div>
         <div className="d-flex justify-content-between py-2 fw-semibold">
           <span>Total:</span>
-          <span>${total + shipping}</span>
+          <span>${(total + shipping).toFixed(2)}</span>
         </div>
         <button
           onClick={onCheckoutHandler}
